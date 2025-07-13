@@ -1,45 +1,22 @@
-# -------- Stage 1: Build with Maven --------
+# ------------ Stage 1: Build the project with Maven ------------
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copy the Maven project file and download dependencies
-COPY pom.xml . 
+# Copy and download dependencies
+COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Copy the rest of the application source
+# Copy source and build
 COPY . .
-
-# Package the application as a WAR file
 RUN mvn clean package -DskipTests
 
-# -------- Stage 2: Run with Jetty --------
-FROM eclipse-temurin:17-jdk
+# ------------ Stage 2: Run using Jetty ------------
+FROM jetty:11.0.14-jdk17
 
-ENV JETTY_VERSION=11.0.14
-ENV JETTY_HOME=/opt/jetty
+# Copy the generated WAR from build stage to Jetty's webapps directory
+COPY --from=build /app/target/*.war /var/lib/jetty/webapps/ROOT.war
 
-# Install wget and other dependencies
-RUN apt-get update && \
-    apt-get install -y wget ca-certificates gnupg && \
-    wget https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${JETTY_VERSION}/jetty-distribution-${JETTY_VERSION}.tar.gz && \
-    tar -xzf jetty-distribution-${JETTY_VERSION}.tar.gz && \
-    mv jetty-distribution-${JETTY_VERSION} $JETTY_HOME && \
-    rm jetty-distribution-${JETTY_VERSION}.tar.gz && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Set up Jetty base directory
-RUN mkdir /jetty-base
-WORKDIR /jetty-base
-
-# Add the webapp module to Jetty
-RUN java -jar $JETTY_HOME/start.jar --add-module=webapp
-
-# Copy the built WAR file from the build stage into Jetty
-COPY --from=build /app/target/*.war ./webapps/ROOT.war
-
-# Expose the port Jetty will run on
 EXPOSE 8080
 
-# Start Jetty
-CMD ["java", "-jar", "/opt/jetty/start.jar"]
+# Jetty will automatically run the WAR

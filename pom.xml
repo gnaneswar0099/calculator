@@ -70,7 +70,7 @@
                 <version>11.0.14</version>
                 <configuration>
         <httpConnector>
-            <port>9091</port> <!-- ✅ Set Jetty to use port 9091 instead of 8080 -->
+            <port>8080</port> <!-- ✅ Set Jetty to use port 9091 instead of 8080 -->
         </httpConnector>
         <scan>2</scan>
     </configuration>
