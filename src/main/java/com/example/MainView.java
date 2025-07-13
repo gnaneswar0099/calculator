@@ -8,6 +8,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 @Route("")
+@PageTitle("Calculator")
 public class MainView extends VerticalLayout {
 
     private final TextArea display = new TextArea();
