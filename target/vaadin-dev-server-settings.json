@@ -11,7 +11,7 @@
   "jarResourcesFolder": "C:/Users/gnane/OneDrive/Desktop/java/CalculatorWithExp4j/swing-calculator-web/src/main/frontend/generated/jar-resources",
   "themeName": "",
   "clientServiceWorkerSource": "C:\\Users\\gnane\\OneDrive\\Desktop\\java\\CalculatorWithExp4j\\swing-calculator-web\\target\\sw.ts",
-  "pwaEnabled": true,
-  "offlineEnabled": true,
-  "offlinePath": "'.'"
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
 }

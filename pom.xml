@@ -4,6 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.example</groupId>
     <artifactId>swing-calculator-web</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -16,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <vaadin.version>24.4.3</vaadin.version>
+        <vaadin.productionMode>true</vaadin.productionMode> <!-- ✅ Enable production mode -->
     </properties>
 
     <dependencyManagement>
@@ -31,38 +33,39 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Vaadin UI Framework -->
+        <!-- ✅ Vaadin UI Framework -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
         </dependency>
 
-        <!-- SLF4J Logging -->
+        <!-- ✅ Math Expression Evaluator -->
+        <dependency>
+            <groupId>net.objecthunter</groupId>
+            <artifactId>exp4j</artifactId>
+            <version>0.4.8</version>
+        </dependency>
+
+        <!-- ✅ Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
 
-        <!-- Servlet API -->
+        <!-- ✅ Servlet API for Jetty -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Math Expression Evaluator -->
-        <dependency>
-            <groupId>net.objecthunter</groupId>
-            <artifactId>exp4j</artifactId>
-            <version>0.4.8</version>
-        </dependency>
     </dependencies>
 
     <build>
         <defaultGoal>jetty:run</defaultGoal>
         <plugins>
-            <!-- Jetty for Local Dev -->
+
+            <!-- ✅ Jetty plugin for local development -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -75,21 +78,23 @@
                 </configuration>
             </plugin>
 
-            <!-- Vaadin Plugin -->
+            <!-- ✅ Vaadin plugin to build frontend -->
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.version}</version>
                 <executions>
                     <execution>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>prepare-frontend</goal>
+                            <goal>build-frontend</goal> <!-- ✅ Required for production -->
                         </goals>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- WAR Plugin -->
+            <!-- ✅ WAR packaging plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -101,50 +106,13 @@
         </plugins>
     </build>
 
+    <!-- ✅ Optional: Retained empty profile for clarity (no special dependencies needed) -->
     <profiles>
         <profile>
             <id>production</id>
             <properties>
                 <vaadin.productionMode>true</vaadin.productionMode>
             </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin-core</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.vaadin</groupId>
-                            <artifactId>vaadin-dev</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
-                        <version>${vaadin.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>build-frontend</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>3.3.2</version>
-                        <configuration>
-                            <failOnMissingWebXml>false</failOnMissingWebXml>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 

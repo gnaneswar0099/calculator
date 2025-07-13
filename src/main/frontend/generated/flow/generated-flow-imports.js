@@ -1,11 +1,5 @@
-import '@vaadin/polymer-legacy-adapter/style-modules.js';
-import '@vaadin/text-area/src/vaadin-text-area.js';
-import '@vaadin/vertical-layout/src/vaadin-vertical-layout.js';
-import '@vaadin/tooltip/src/vaadin-tooltip.js';
-import '@vaadin/horizontal-layout/src/vaadin-horizontal-layout.js';
-import '@vaadin/button/src/vaadin-button.js';
-import 'Frontend/generated/jar-resources/buttonFunctions.js';
 import '@vaadin/common-frontend/ConnectionIndicator.js';
+import '@vaadin/polymer-legacy-adapter/style-modules.js';
 import '@vaadin/vaadin-lumo-styles/color-global.js';
 import '@vaadin/vaadin-lumo-styles/typography-global.js';
 import '@vaadin/vaadin-lumo-styles/sizing.js';
