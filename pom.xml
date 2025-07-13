@@ -7,7 +7,7 @@
     <groupId>com.example</groupId>
     <artifactId>swing-calculator-web</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>My Application</name>
+    <name>Swing Calculator Web</name>
     <packaging>war</packaging>
 
     <properties>
@@ -18,27 +18,26 @@
         <vaadin.version>24.4.3</vaadin.version>
     </properties>
 
-    <!-- Vaadin BOM for version control -->
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
+                <version>${vaadin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-                <version>${vaadin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!-- Vaadin full platform -->
+        <!-- Vaadin UI Framework -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
         </dependency>
 
-        <!-- SLF4J Simple Logger -->
+        <!-- SLF4J Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -52,7 +51,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ✅ Added: exp4j for expression evaluation -->
+        <!-- Math Expression Evaluator -->
         <dependency>
             <groupId>net.objecthunter</groupId>
             <artifactId>exp4j</artifactId>
@@ -63,20 +62,20 @@
     <build>
         <defaultGoal>jetty:run</defaultGoal>
         <plugins>
-            <!-- Jetty plugin for HTTP server -->
+            <!-- Jetty for Local Dev -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>11.0.14</version>
                 <configuration>
-        <httpConnector>
-            <port>8080</port> <!-- ✅ Set Jetty to use port 9091 instead of 8080 -->
-        </httpConnector>
-        <scan>2</scan>
-    </configuration>
+                    <httpConnector>
+                        <port>9091</port>
+                    </httpConnector>
+                    <scan>2</scan>
+                </configuration>
             </plugin>
 
-            <!-- Vaadin frontend tasks -->
+            <!-- Vaadin Plugin -->
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
@@ -90,19 +89,24 @@
                 </executions>
             </plugin>
 
-            <!-- WAR packaging plugin -->
+            <!-- WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <!-- Optional production profile -->
     <profiles>
         <profile>
             <id>production</id>
+            <properties>
+                <vaadin.productionMode>true</vaadin.productionMode>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>com.vaadin</groupId>
@@ -123,15 +127,25 @@
                         <version>${vaadin.version}</version>
                         <executions>
                             <execution>
+                                <phase>compile</phase>
                                 <goals>
                                     <goal>build-frontend</goal>
                                 </goals>
-                                <phase>compile</phase>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>3.3.2</version>
+                        <configuration>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
+
 </project>
